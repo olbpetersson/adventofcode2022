@@ -5,32 +5,38 @@ package adventofcode2022
 
 import java.lang.IllegalStateException
 
+
+
 fun main() {
+    val expectedOutcome = mapOf(
+        "X" to 0,
+        "Y" to 3,
+        "Z" to 6
+    )
+
     val strategyMap = mapOf(
-        "A" to 1,
-        "B" to 2,
-        "C" to 3,
-        "X" to 1,
-        "Y" to 2,
-        "Z" to 3
+        "A" to 0,
+        "B" to 1,
+        "C" to 2,
     )
 
     val lines = readFile("/day2").readLines()
     val sum = lines.sumOf {
         val splittedLine = it.split(" ")
-        getRoundScore(strategyMap.get(splittedLine[0])!!, strategyMap.get(splittedLine[1])!!)
+        determineRoundScore(strategyMap.get(splittedLine[0])!!, expectedOutcome.get(splittedLine[1])!!)
     }
     println("sum $sum")
 }
 
-fun getRoundScore(opponent: Int, you: Int): Int {
+fun determineRoundScore(opponent: Int, expectedOutcome: Int): Int {
     // 1 rock, 2 paper, 3 scissor
-    // 2-1
+    // 0 loss, 3 draw, 6 win
+    val options = arrayOf(1, 2, 3)
 
-    return you + when (you - opponent) {
-        1, -2 -> 6
-        -1, 2 -> 0
-        0 -> 3
+    return expectedOutcome + when (expectedOutcome) {
+        0 -> options[(opponent+2)%3]
+        3 -> options[opponent]
+        6 -> options[(opponent+1)%3]
         else -> throw IllegalStateException()
     }
 }
