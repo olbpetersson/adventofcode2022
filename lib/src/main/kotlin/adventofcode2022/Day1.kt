@@ -6,8 +6,8 @@ package adventofcode2022
 fun main() {
     val input = readFile("/day1")
     val rawGroups = input.readText().split("\n\n")
-    val max = rawGroups.maxOf { group ->
+    val topThree = rawGroups.map { group ->
         group.trim().split("\n").map { it.toInt() }.sum()
-    }
-    println("max $max")
+    }.sortedDescending().take(3).sum()
+    println("max $topThree")
 }
