@@ -10,13 +10,21 @@ fun main() {
     // a is 97
     val sum = lines.sumOf { line ->
         val stringChunks = line.chunked(line.length / 2)
-        for(char in stringChunks[0]) {
-            if(char in stringChunks[1]) {
-                return@sumOf char.code - if(char.isUpperCase()) 38 else 96
+        for (char in stringChunks[0]) {
+            if (char in stringChunks[1]) {
+                return@sumOf char.code - if (char.isUpperCase()) 38 else 96
             }
         }
         0
     }
     println("sum is $sum")
 
+    val chunkedLists = lines.chunked(3)
+    val groupSum = chunkedLists.sumOf { group ->
+        val char = group[0].first { firstString ->
+            firstString in group[1] && firstString in group[2]
+        }
+        char.code - if (char.isUpperCase()) 38 else 96
+    }
+    println("groupSum is $groupSum")
 }
