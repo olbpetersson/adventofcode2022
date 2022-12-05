@@ -9,13 +9,13 @@ fun main() {
     val (moveIndex, stacks) = getMoveIndexAndStacks(lines)
     lines.subList(moveIndex, lines.size).forEach { strategyLine ->
         val instructions = strategyLine.split(" ")
-        println(instructions)
         val quantity = instructions[1].toInt()
         val from = instructions[3].toInt() - 1
         val to = instructions[5].toInt() - 1
+
         val elements = (1..quantity).map {
             stacks[from].removeFirst()
-        }
+        }.reversed()
         elements.forEach { element ->
             stacks[to].addFirst(element)
         }
@@ -32,16 +32,16 @@ private fun getMoveIndexAndStacks(lines: List<String>): Pair<Int, MutableList<Ar
         if (line.isNotEmpty()) {
             val columnsIncludingWhitespace = line.chunked(4)
             columnsIncludingWhitespace.forEachIndexed { columnIndex, column ->
-                    if (columnIndex >= dequeList.size) {
-                        dequeList.add(ArrayDeque())
-                    }
-                    dequeList[columnIndex].add(column)
+                if (columnIndex >= dequeList.size) {
+                    dequeList.add(ArrayDeque())
+                }
+                dequeList[columnIndex].add(column)
             }
         }
         moveIndex++
     }
-    dequeList.forEachIndexed { index, _ ->
-        dequeList[index] = ArrayDeque(dequeList[index].filter { it.isNotBlank() && !it.trim()[0].isDigit() })
-    }
-    return moveIndex to dequeList
+    val cleanedDequeList = dequeList.map { it ->
+        ArrayDeque(it.filter { it.isNotBlank() && !it.trim().first().isDigit() })
+    } as ArrayList
+    return moveIndex to cleanedDequeList
 }
