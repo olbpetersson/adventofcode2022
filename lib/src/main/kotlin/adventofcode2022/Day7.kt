@@ -22,10 +22,19 @@ fun main() {
             allDirectories.add(directory)
         }
     }
-    val sum = allDirectories.map {
-        it.files.sumOf { it.split(" ").first().toInt() }
-    }.filter { it < 100000 }.sum()
-    println("$sum")
+    val targetSpace = 30000000 - (70000000 - allDirectories[0].files.toFileSize())
+
+    val minimumSize = allDirectories.map {
+        it.files.toFileSize()
+    }.filter { it > targetSpace }.minOf { it }
+    println("$minimumSize")
+
+
+
+}
+
+fun Set<String>.toFileSize(): Int {
+    return this.sumOf { it.split(" ").first().toInt() }
 }
 
 fun updateParentSizes(directory: Directory) {
