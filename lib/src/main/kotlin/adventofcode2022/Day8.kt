@@ -6,22 +6,23 @@ fun main() {
 
     val matrix = lines.map { line -> line.map { it.digitToInt() } }
 
-    val edges = matrix[0].size * 2 + matrix[1].size * 2 - 4
-
-    val treeCount = (1 until matrix.size - 1).sumOf { rowIndex ->
+    val max = (1 until matrix.size - 1).flatMap { rowIndex ->
         val currentRow = matrix[rowIndex]
-        (1 until currentRow.size - 1).count { columnIndex ->
+        return@flatMap (1 until currentRow.size - 1).map { columnIndex ->
             val currentColumn = currentRow[columnIndex]
             val upwardsTrees = matrix.filterIndexed { index, _ -> index < rowIndex }.map { it[columnIndex] }
             val downWardsTrees = matrix.filterIndexed { index, _ -> index > rowIndex }.map { it[columnIndex] }
             val leftTrees = currentRow.subList(0, columnIndex)
             val rightTrees = currentRow.subList(columnIndex + 1, currentRow.size)
-            (leftTrees.none { it >= currentColumn } ||
-                rightTrees.none { it >= currentColumn } ||
-                downWardsTrees.none { it >= currentColumn } ||
-                upwardsTrees.none { it >= currentColumn }
-                )
+            val leftTreesLesserThan = leftTrees.takeLastWhile { it < currentColumn }
+            val rightTreesLesserThan = rightTrees.takeWhile { it < currentColumn }
+            val downWardsLesserThan = downWardsTrees.takeWhile { it < currentColumn }
+            val upwardsLesserThan = upwardsTrees.takeLastWhile { it < currentColumn }
+            (leftTreesLesserThan.count() + (leftTrees - leftTreesLesserThan).size.coerceAtMost(1)) *
+                (rightTreesLesserThan.count() + (rightTrees - rightTreesLesserThan).size.coerceAtMost(1)) *
+                (downWardsLesserThan.count() + (downWardsTrees - downWardsLesserThan).size.coerceAtMost(1)) *
+                (upwardsLesserThan.count() + (upwardsTrees - upwardsLesserThan).size.coerceAtMost(1))
         }
-    }
-    println(edges + treeCount)
+    }.maxOf { it }
+    println(max)
 }
