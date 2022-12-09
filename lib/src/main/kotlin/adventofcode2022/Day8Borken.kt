@@ -20,7 +20,7 @@ data class Tree(
 
 fun main() {
 
-    val lines = readFileText("/day8ex").trim().lines()
+    val lines = readFileText("/day8").trim().lines()
 
     val treeMap = mutableMapOf<String, Tree>()
     lines.forEachIndexed { lineIndex, line ->
